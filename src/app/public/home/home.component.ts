@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 import { Observable } from 'rxjs/Observable';
 import * as firebase from 'firebase/app';
-import { AuthService } from '../../services/auth.service';
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
 })
-export class HeaderComponent implements OnInit {
+export class HomeComponent implements OnInit {
   firebaseUser$: Observable<firebase.User> = null;
 
   constructor(private authService: AuthService) { }
@@ -16,4 +16,5 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     this.firebaseUser$ = this.authService.getLoggedUser();
   }
+
 }

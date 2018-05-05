@@ -1,0 +1,2 @@
+<div *ngIf="(firebaseUser$ | async)?.uid">Welcome {{(firebaseUser$ | async)?.email}}</div>
+<div *ngIf="!(firebaseUser$ | async)?.uid">Please <a routerLink="/public/login">Login</a></div>

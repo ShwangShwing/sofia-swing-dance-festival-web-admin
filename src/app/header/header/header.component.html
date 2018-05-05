@@ -1,9 +1,7 @@
-<header>
+<nav>
     <ul>
-        <li><a href="">item 1</a></li>
-        <li><a href="">item 2</a></li>
-        <li><a href="">item 3</a></li>
-        <li><a href="">item 4</a></li>
-        <li><a href="">item 5</a></li>
+        <li [routerLinkActive]="['active']"><a routerLink="/public/home">Home</a></li>
+        <li *ngIf="!(firebaseUser$ | async)?.uid" [routerLinkActive]="['active']"><a routerLink="/public/login">Login</a></li>
+        <li *ngIf="(firebaseUser$ | async)?.uid" [routerLinkActive]="['active']"><a routerLink="/public/logout">Logout</a></li>
     </ul>
-</header>
+</nav>
