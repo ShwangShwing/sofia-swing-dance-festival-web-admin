@@ -13,6 +13,7 @@ import { HeaderComponent } from './header/header/header.component';
 import { FooterComponent } from './footer/footer/footer.component';
 
 import { AuthService } from './services/auth.service';
+import { SsdfYearsService } from './services/data/ssdf-years.service';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,7 @@ import { AuthService } from './services/auth.service';
     AngularFireDatabaseModule,
     AngularFireAuthModule,
   ],
-  providers: [AuthService],
+  providers: [AuthService, SsdfYearsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

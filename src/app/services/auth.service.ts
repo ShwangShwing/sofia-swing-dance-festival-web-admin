@@ -3,9 +3,10 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 import { Observable } from 'rxjs/Observable';
+import { CanActivate } from '@angular/router';
 
 @Injectable()
-export class AuthService {
+export class AuthService implements CanActivate {
   private firebaseUser$: Observable<firebase.User>;
 
   constructor(private firebaseAuth: AngularFireAuth) {
@@ -28,5 +29,9 @@ export class AuthService {
 
   getLoggedUser() {
     return this.firebaseUser$;
+  }
+
+  canActivate(): Observable<boolean> {
+    return this.firebaseUser$.map(user => !!user.uid);
   }
 }

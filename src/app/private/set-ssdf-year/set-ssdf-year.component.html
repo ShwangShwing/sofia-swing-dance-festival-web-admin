@@ -1,0 +1,17 @@
+<div>
+  Warning, clicking change will change the active database of all the devices!
+  Use this after you've entered enough information so that users don't see invalid data.
+</div>
+<div>
+  <form #formData="ngForm" (ngSubmit)="onSubmit(formData)">
+      <label for="active-ssdf-year">Database</label>
+      <select name="active-ssdf-year" id="active-ssdf-year" [(ngModel)]="selectedActiveSsdfYear">
+          <option 
+              *ngFor="let ssdfYear of (ssdfYears$ | async)" 
+              [value]="ssdfYear">
+              {{ssdfYear + (activeSsdfYear == ssdfYear ? ' (active)' : '')}} 
+          </option>
+      </select>
+      <button type="submit">Change!</button>
+  </form>
+</div>

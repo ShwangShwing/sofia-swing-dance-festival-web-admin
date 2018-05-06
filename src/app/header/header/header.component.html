@@ -1,7 +1,43 @@
+<div>The most ugly and user unfriendly web admin interface</div>
+<div *ngIf="(firebaseUser$ | async)?.uid">
+    <label for="selected-ssdf-year">Database</label>
+    <select name="selected-ssdf-year" id="selected-ssdf-year"
+        (change)="onChangeSelectedSsdfYear($event.target.value)">
+        <option 
+            *ngFor="let ssdfYear of (ssdfYears$ | async)" 
+            [value]="ssdfYear"
+            [selected]="ssdfYear == selectedSsdfYear">
+            {{ssdfYear + (activeSsdfYear == ssdfYear ? ' (active)' : '')}} 
+        </option>
+    </select>
+</div>
 <nav>
     <ul>
         <li [routerLinkActive]="['active']"><a routerLink="/public/home">Home</a></li>
         <li *ngIf="!(firebaseUser$ | async)?.uid" [routerLinkActive]="['active']"><a routerLink="/public/login">Login</a></li>
-        <li *ngIf="(firebaseUser$ | async)?.uid" [routerLinkActive]="['active']"><a routerLink="/public/logout">Logout</a></li>
+        <li *ngIf="(firebaseUser$ | async)?.uid" [routerLinkActive]="['active']">
+            <a routerLink="/private/set-ssdf-year">Set database</a>
+        </li>
+        <li *ngIf="(firebaseUser$ | async)?.uid" [routerLinkActive]="['active']">
+            <a routerLink="/private/new-ssdf-year">New database</a>
+        </li>
+        <li *ngIf="(firebaseUser$ | async)?.uid" [routerLinkActive]="['active']">
+            <a routerLink="/private/news">News</a>
+        </li>
+        <li *ngIf="(firebaseUser$ | async)?.uid" [routerLinkActive]="['active']">
+                <a routerLink="/private/class-levels">Class levels</a>
+        </li>
+        <li *ngIf="(firebaseUser$ | async)?.uid" [routerLinkActive]="['active']">
+            <a routerLink="/private/events">Events</a>
+        </li>
+        <li *ngIf="(firebaseUser$ | async)?.uid" [routerLinkActive]="['active']">
+            <a routerLink="/private/venues">Venues</a>
+        </li>
+        <li *ngIf="(firebaseUser$ | async)?.uid" [routerLinkActive]="['active']">
+            <a routerLink="/private/class-levels">Class levels</a>
+        </li>
+        <li *ngIf="(firebaseUser$ | async)?.uid" [routerLinkActive]="['active']">
+            <a routerLink="/public/logout">Logout {{(firebaseUser$ | async)?.email}}</a>
+        </li>
     </ul>
 </nav>
