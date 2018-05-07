@@ -11,9 +11,9 @@ import { Subscription } from 'rxjs/Subscription';
   styleUrls: ['./set-ssdf-year.component.css']
 })
 export class SetSsdfYearComponent implements OnInit, OnDestroy {
-  private ssdfYears$: Observable<string[]> = null;
-  private activeSsdfYear = '';
-  private selectedActiveSsdfYear = '';
+  ssdfYears$: Observable<string[]> = null;
+  activeSsdfYear = '';
+  selectedActiveSsdfYear = '';
 
   private subscriptions = new Subscription();
 

@@ -1,0 +1,24 @@
+<div>
+    <div *ngIf="errorMessage">
+      {{errorMessage}}
+    </div>
+    <div>
+      <label for="database-name">New database name</label>
+      <input type="text" 
+        name="database-name" 
+        id="database-name" 
+        [(ngModel)]="newSsdfYearName">
+    </div>
+    <div>
+      <label for="copy-from-ssdf-year">Copy from</label>
+      <select name="copy-from-ssdf-year" id="copy-from-ssdf-year"
+        [(ngModel)]="selectedSsdfYear">
+        <option 
+            *ngFor="let ssdfYear of ssdfYears; let i = index" 
+            [value]="i > 0 ? ssdfYear : ''">
+            {{ssdfYear + (activeSsdfYear == ssdfYear ? ' (active)' : '')}} 
+        </option>
+      </select>
+    </div>
+    <button type="submit" (click)="onCreateClick()">Create!</button>
+</div>

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { map } from 'rxjs/operators';
+import { map, first } from 'rxjs/operators';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { AuthService } from '../auth.service';
 
@@ -39,10 +39,42 @@ export class SsdfYearsService {
   setSelectedSsdfYear(selectedSsdfYear: string): void {
     this.selectedSsdfYear$.next(selectedSsdfYear);
     this.isSelectedSsdfYearInit = true;
-    console.log(selectedSsdfYear);
   }
 
   setActiveSsdfYear(activeSsdfYear: string): void {
     this.af.object<string>('/activeSsdfYear').set(activeSsdfYear);
+  }
+
+  newSsdfYear(ssdfYearName: string): void {
+    this.af.object(`/${ssdfYearName}`)
+      .valueChanges()
+      .first()
+      .toPromise()
+      .then(year => {
+        if (!year) {
+          this.af.object(`/${ssdfYearName}`)
+            .update({creationMethod: 'Created de novo by web admin'});
+        }
+      });
+  }
+
+  copySsdfYear(ssdfYearFrom: string, ssdfYearName: string): void {
+    this.af.object(`/${ssdfYearName}`)
+      .valueChanges()
+      .first()
+      .toPromise()
+      .then(year => {
+        if (!year) {
+          this.af.object(`/${ssdfYearFrom}`)
+            .valueChanges()
+            .first()
+            .toPromise<any>()
+            .then(oldYear => {
+              oldYear.creationMethod = `Copied from ${ssdfYearFrom} by web admin`;
+              this.af.object(`/${ssdfYearName}`)
+                .update(oldYear);
+            });
+        }
+      });
   }
 }
