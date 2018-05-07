@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject'
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { map } from 'rxjs/operators';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { AuthService } from '../auth.service';
@@ -9,14 +9,12 @@ import { AuthService } from '../auth.service';
 export class SsdfYearsService {
   private selectedSsdfYear$ = new BehaviorSubject<string>('');
   private isSelectedSsdfYearInit = false;
-  private activeSsdfYear$ = new BehaviorSubject<string>('');
 
   constructor(private af: AngularFireDatabase, private authService: AuthService) {
     this.af.object<string>('/activeSsdfYear').valueChanges().subscribe(activeSsdfYear => {
       if (!this.isSelectedSsdfYearInit) {
         this.selectedSsdfYear$.next(activeSsdfYear);
         this.isSelectedSsdfYearInit = true;
-        this.activeSsdfYear$.next(activeSsdfYear);
       }
     });
    }
@@ -35,7 +33,7 @@ export class SsdfYearsService {
   }
 
   getActiveSsdfYear(): Observable<string> {
-    return this.activeSsdfYear$;
+    return this.af.object<string>('/activeSsdfYear').valueChanges();
   }
 
   setSelectedSsdfYear(selectedSsdfYear: string): void {
