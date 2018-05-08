@@ -1,0 +1,74 @@
+<table class="collection-table">
+  <thead>
+    <tr>
+      <td>Picture</td>
+      <td>Time</td>
+      <td>Text</td>
+      <td>Publish</td>
+      <td>Edit</td>
+      <td>Delete</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let newsArticle of (newsArticles$ | async)" 
+    class="item-row" 
+    [class.item-for-deletion]="newsArticle.id == deleteArticleId"
+    [class.edited-item]="newsArticle.id == editArticleId">
+      <td>
+        <img *ngIf="newsArticle.imageUrl" [src]="newsArticle.imageUrl" class="table-image"/>
+      </td>
+      <td>
+        {{newsArticle.postedOn * 1000 | date: 'yyyy-MM-dd hh:mm O' : 'Europe/Sofia'}}
+      </td>
+      <td>
+        <div class="news-article-field">
+          {{newsArticle.text}}
+        </div>
+      </td>
+      <td>
+        <div *ngIf="newsArticle.isPublished">
+          Published!
+        </div>
+        <div *ngIf="!newsArticle.isPublished">
+          <button (click)="publishArticle(newsArticle.id)">Publish</button>
+        </div>
+      </td>
+      <td>
+        <div>
+          <button (click)="editArticle(newsArticle)">
+            Edit
+          </button>
+        </div>
+      </td>
+      <td>
+        <button *ngIf="deleteArticleId != newsArticle.id" (click)="setArticleForDeletion(newsArticle.id)">Delete</button>
+        <button *ngIf="deleteArticleId == newsArticle.id" (click)="cancelNewsArticleDeletion()">Don't delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div *ngIf="deleteArticleId">
+  <button (click)="deleteNewsArticle()">Delete selected article</button>
+  <button (click)="cancelNewsArticleDeletion()">Don't delete</button>
+</div>
+<div class="new-edit-section">
+    <div>
+      New news article:
+    </div>
+    <div>
+      <label for="image-url">Image URL: </label>
+      <input type="text" id="image-url" [(ngModel)]="newEditArticleImageUrl">
+    </div>
+    <div>
+      <label for="article-text">Text: </label>
+    </div>
+    <div>
+      <textarea id="article-text" [(ngModel)]="newEditArticleText"></textarea>
+    </div>
+    <div>
+      <button *ngIf="!editArticleId" (click)="createNewArticle()">Create article</button>
+      <button *ngIf="editArticleId" (click)="updateArticle()">Save article</button>
+      <button (click)="resetNewEdit()">Cancel</button>
+    </div>
+</div>
+

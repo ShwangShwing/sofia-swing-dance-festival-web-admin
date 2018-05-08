@@ -14,6 +14,8 @@ import { FooterComponent } from './footer/footer/footer.component';
 
 import { AuthService } from './services/auth.service';
 import { SsdfYearsService } from './services/data/ssdf-years.service';
+import { NewsService } from './services/data/news.service';
+import { ClassLevelsService } from './services/data/class-levels.service';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,7 @@ import { SsdfYearsService } from './services/data/ssdf-years.service';
     AngularFireDatabaseModule,
     AngularFireAuthModule,
   ],
-  providers: [AuthService, SsdfYearsService],
+  providers: [AuthService, SsdfYearsService, NewsService, ClassLevelsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

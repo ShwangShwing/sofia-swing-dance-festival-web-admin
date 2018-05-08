@@ -1,0 +1,56 @@
+<table class="collection-table">
+  <thead>
+    <tr>
+      <td>Name</td>
+      <td>Order position</td>
+      <td>Edit</td>
+      <td>Delete</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let classLevel of (classLevels$ | async)" class="item-row" [class.item-for-deletion]="classLevel.id == deleteId"
+      [class.edited-item]="classLevel.id == editId">
+      <td>
+        {{classLevel.name}}
+      </td>
+      <td>
+        <div>
+          {{classLevel.position}}
+        </div>
+      </td>
+      <td>
+        <div>
+          <button (click)="edit(classLevel)">
+            Edit
+          </button>
+        </div>
+      </td>
+      <td>
+        <button *ngIf="deleteId != classLevel.id" (click)="setForDeletion(classLevel.id)">Delete</button>
+        <button *ngIf="deleteId == classLevel.id" (click)="cancelDeletion()">Don't delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div *ngIf="deleteId">
+  <button (click)="delete()">Delete selected</button>
+  <button (click)="cancelDeletion()">Don't delete</button>
+</div>
+<div class="new-edit-section">
+  <div>
+    New class level:
+  </div>
+  <div>
+    <label for="class-level-name">Class level name: </label>
+    <input type="text" id="class-level-name" [(ngModel)]="newEditClassLevelName">
+  </div>
+  <div>
+    <label for="class-level-position">Class level sort position: </label>
+    <input type="number" id="class-level-position" [(ngModel)]="newEditClassLevelPosition">
+  </div>
+  <div>
+    <button *ngIf="!editId" (click)="create()">Create</button>
+    <button *ngIf="editId" (click)="update()">Save</button>
+    <button (click)="resetNewEdit()">Cancel</button>
+  </div>
+</div>
