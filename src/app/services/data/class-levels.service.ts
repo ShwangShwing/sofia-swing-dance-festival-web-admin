@@ -9,7 +9,6 @@ import { SsdfYearsService } from './ssdf-years.service';
 @Injectable()
 export class ClassLevelsService {
   private classLevels$ = new BehaviorSubject<ClassLevelModel[]>([]);
-  private subscriptions = new Subscription();
   private selectedSsdfYear = '';
   constructor(private af: AngularFireDatabase,
     private ssdfYearsService: SsdfYearsService) {
@@ -21,12 +20,12 @@ export class ClassLevelsService {
           classLevelsSubscr = this.af
             .list(`/${this.selectedSsdfYear}/classLevels`)
             .snapshotChanges()
-            .subscribe(dbNewsArticles => {
+            .subscribe(dbClassLevels => {
               const outClassLevels: ClassLevelModel[] = [];
-              dbNewsArticles.forEach(dbNewsArticle => {
-                const inDbClassLevel = dbNewsArticle.payload.val();
+              dbClassLevels.forEach(dbClassLevel => {
+                const inDbClassLevel = dbClassLevel.payload.val();
                 const classLevel: ClassLevelModel = {
-                  id: `/${this.selectedSsdfYear}/classLevels/${dbNewsArticle.key}`,
+                  id: `/${this.selectedSsdfYear}/classLevels/${dbClassLevel.key}`,
                   name: inDbClassLevel.name || '',
                   position: inDbClassLevel.position || 0
                 };

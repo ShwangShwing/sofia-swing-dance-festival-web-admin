@@ -16,6 +16,7 @@ import { AuthService } from './services/auth.service';
 import { SsdfYearsService } from './services/data/ssdf-years.service';
 import { NewsService } from './services/data/news.service';
 import { ClassLevelsService } from './services/data/class-levels.service';
+import { VenuesService } from './services/data/venues.service';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,11 @@ import { ClassLevelsService } from './services/data/class-levels.service';
     AngularFireDatabaseModule,
     AngularFireAuthModule,
   ],
-  providers: [AuthService, SsdfYearsService, NewsService, ClassLevelsService],
+  providers: [AuthService,
+    SsdfYearsService,
+    NewsService,
+    ClassLevelsService,
+    VenuesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

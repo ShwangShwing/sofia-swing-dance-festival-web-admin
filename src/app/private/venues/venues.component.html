@@ -1,0 +1,83 @@
+<table class="collection-table">
+  <thead>
+    <tr>
+      <td>Picture</td>
+      <td>Name</td>
+      <td>Address</td>
+      <td>Youtube URL</td>
+      <td>Position</td>
+      <td>Edit</td>
+      <td>Delete</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let venue of (venues$ | async)" class="item-row" [class.item-for-deletion]="venue.id == deleteId" [class.edited-item]="venue.id == editId">
+      <td>
+        <img *ngIf="venue.imageUrl" [src]="venue.imageUrl" class="table-image" />
+      </td>
+      <td>
+        {{venue.name}}
+      </td>
+      <td>
+        {{venue.address}}
+      </td>
+      <td>
+        <a *ngIf="venue.youtubeUrl" [href]="venue.youtubeUrl" target="_blank">{{venue.youtubeUrl}}</a>
+      </td>
+      <td>
+        {{venue.position}}
+      </td>
+      <td>
+        <button (click)="edit(venue)">
+          Edit
+        </button>
+      </td>
+      <td>
+        <button *ngIf="deleteId != venue.id" (click)="setForDeletion(venue.id)">Delete</button>
+        <button *ngIf="deleteId == venue.id" (click)="cancelDeletion()">Don't delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div *ngIf="deleteId">
+  <button (click)="delete()">Delete selected</button>
+  <button (click)="cancelDeletion()">Don't delete</button>
+</div>
+<div class="new-edit-section">
+  <div>
+    Venue:
+  </div>
+  <div>
+    <label for="venue-image-url">Venue image URL: </label>
+    <input type="text" id="venue-image-url" [(ngModel)]="newEditVenueImageUrl">
+  </div>
+  <div>
+    <label for="venue-youtube-url">Venue youtube URL: </label>
+    <input type="text" id="venue-youtube-url" [(ngModel)]="newEditVenueYoutubeUrl">
+  </div>
+  <div>
+    <label for="venue-name">Venue name: </label>
+    <input type="text" id="venue-name" [(ngModel)]="newEditVenueName">
+  </div>
+  <div>
+    <label for="venue-address">Venue address: </label>
+    <input type="text" id="venue-address" [(ngModel)]="newEditVenueAddress">
+  </div>
+  <div>
+    <label for="venue-latitude">Venue latitude: </label>
+    <input type="number" id="venue-latitude" [(ngModel)]="newEditVenueLatitude">
+  </div>
+  <div>
+    <label for="venue-longitude">Venue longitude: </label>
+    <input type="number" id="venue-longitude" [(ngModel)]="newEditVenueLongitude">
+  </div>
+  <div>
+    <label for="venue-position">Venue sort position: </label>
+    <input type="number" id="venue-position" [(ngModel)]="newEditVenuePosition">
+  </div>
+  <div>
+    <button *ngIf="!editId" (click)="create()">Create</button>
+    <button *ngIf="editId" (click)="update()">Save</button>
+    <button (click)="resetNewEdit()">Cancel</button>
+  </div>
+</div>

@@ -6,6 +6,7 @@ import { SetSsdfYearModule } from './set-ssdf-year/set-ssdf-year.module';
 import { NewSsdfYearModule } from './new-ssdf-year/new-ssdf-year.module';
 import { NewsModule } from './news/news.module';
 import { ClassLevelsModule } from './class-levels/class-levels.module';
+import { VenuesModule } from './venues/venues.module';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { ClassLevelsModule } from './class-levels/class-levels.module';
     SetSsdfYearModule,
     NewSsdfYearModule,
     NewsModule,
-    ClassLevelsModule
+    ClassLevelsModule,
+    VenuesModule
   ],
   declarations: []
 })
