@@ -17,6 +17,7 @@ import { SsdfYearsService } from './services/data/ssdf-years.service';
 import { NewsService } from './services/data/news.service';
 import { ClassLevelsService } from './services/data/class-levels.service';
 import { VenuesService } from './services/data/venues.service';
+import { InstructorsService } from './services/data/instructors.service';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { VenuesService } from './services/data/venues.service';
     SsdfYearsService,
     NewsService,
     ClassLevelsService,
-    VenuesService],
+    VenuesService,
+    InstructorsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

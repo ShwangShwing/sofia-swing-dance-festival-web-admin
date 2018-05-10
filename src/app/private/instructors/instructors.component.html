@@ -1,0 +1,83 @@
+<table class="collection-table">
+  <thead>
+    <tr>
+      <td>Picture</td>
+      <td>Name</td>
+      <td>Description</td>
+      <td>Type</td>
+      <td>Position</td>
+      <td>Edit</td>
+      <td>Delete</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let instructor of (instructors$ | async)" class="item-row" [class.item-for-deletion]="instructor.id == deleteId"
+      [class.edited-item]="instructor.id == editId">
+      <td>
+        <img *ngIf="instructor.imageUrl" [src]="instructor.imageUrl" class="table-image" />
+      </td>
+      <td>
+        {{instructor.name}}
+      </td>
+      <td>
+        <div class="news-article-field">
+          {{instructor.description}}
+        </div>
+      </td>
+      <td>
+        {{instructor.type == 'main' ? 'Main' : instructor.type == 'taster' ? 'Taster' : 'Invalid!'}}
+      </td>
+      <td>
+        {{instructor.position}}
+      </td>
+      <td>
+        <button (click)="edit(instructor)">
+          Edit
+        </button>
+      </td>
+      <td>
+        <button *ngIf="deleteId != instructor.id" (click)="setForDeletion(instructor.id)">Delete</button>
+        <button *ngIf="deleteId == instructor.id" (click)="cancelDeletion()">Don't delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div *ngIf="deleteId">
+  <button (click)="delete()">Delete selected</button>
+  <button (click)="cancelDeletion()">Don't delete</button>
+</div>
+<div class="new-edit-section">
+  <div>
+    Instructor:
+  </div>
+  <div>
+    <label for="instructor-image-url">Instructor image URL: </label>
+    <input type="text" id="instructor-image-url" [(ngModel)]="newEditInstructorImageUrl">
+  </div>
+  <div>
+    <label for="instructor-name">Instructor name: </label>
+    <input type="text" id="instructor-name" [(ngModel)]="newEditInstructorName">
+  </div>
+  <div>
+    <div>
+      <label for="instructor-description">Instructor description: </label>
+    </div>
+    <textarea id="instructor-description" [(ngModel)]="newEditInstructorDescription"></textarea>  
+  </div>
+  <div>
+      <label for="instructor-type">Instructor type: </label>
+      <select id="instructor-type" [(ngModel)]="newEditInstructorType">
+        <option value="main">Main</option>
+        <option value="taster">Taster</option>
+      </select>
+  </div>
+  <div>
+    <label for="instructor-position">Instructor sort position: </label>
+    <input type="number" id="instructor-position" [(ngModel)]="newEditInstructorPosition">
+  </div>
+  <div>
+    <button *ngIf="!editId" (click)="create()">Create</button>
+    <button *ngIf="editId" (click)="update()">Save</button>
+    <button (click)="resetNewEdit()">Cancel</button>
+  </div>
+</div>
