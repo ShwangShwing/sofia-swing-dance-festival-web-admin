@@ -1,0 +1,61 @@
+Filter by type: 
+<select [(ngModel)]="eventTypeFilter">
+  <option value="">All</option>
+  <option value="class">Main class</option>
+  <option value="taster_class">Taster class</option>
+  <option value="party">Party</option>
+  <option value="misc">Misc</option>
+</select>
+<table class="collection-table">
+  <thead>
+    <tr>
+      <td>Name</td>
+      <td>Start time</td>
+      <td>End time</td>
+      <td>Type</td>
+      <td>Venue</td>
+      <td>Edit</td>
+      <td>Delete</td>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let event of (events$ | async)">
+      <tr *ngIf="event.type.startsWith(eventTypeFilter)" class="item-row" [class.item-for-deletion]="event.id == deleteId" [class.edited-item]="event.id == editId">
+        <td>
+          {{event.name}}
+        </td>
+        <td>
+          {{event.startTime * 1000 | date: 'yyyy-MM-dd hh:mm O' : 'Europe/Sofia'}}
+        </td>
+        <td>
+          {{event.endTime * 1000 | date: 'yyyy-MM-dd hh:mm O' : 'Europe/Sofia'}}
+        </td>
+        <td>
+          {{event.type}}
+        </td>
+        <td>
+          {{event.venueId}}
+        </td>
+        <td>
+          <button (click)="edit(event)">
+            Edit
+          </button>
+        </td>
+        <td>
+          <button *ngIf="deleteId != event.id" (click)="setForDeletion(event.id)">Delete</button>
+          <button *ngIf="deleteId == event.id" (click)="cancelDeletion()">Don't delete</button>
+        </td>
+      </tr>
+    </ng-container>
+  </tbody>
+</table>
+<div *ngIf="deleteId">
+  <button (click)="delete()">Delete selected</button>
+  <button (click)="cancelDeletion()">Don't delete</button>
+</div>
+<div class="new-edit-section">
+  <div>
+    Event:
+  </div>
+
+</div>

@@ -6,6 +6,7 @@ import { NewsComponent } from './news/news.component';
 import { ClassLevelsComponent } from './class-levels/class-levels.component';
 import { VenuesComponent } from './venues/venues.component';
 import { InstructorsComponent } from './instructors/instructors.component';
+import { EventsComponent } from './events/events.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'set-ssdf-year', pathMatch: 'full' },
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'class-levels', component: ClassLevelsComponent },
   { path: 'venues', component: VenuesComponent },
   { path: 'instructors', component: InstructorsComponent },
+  { path: 'events', component: EventsComponent }
 ];
 
 @NgModule({

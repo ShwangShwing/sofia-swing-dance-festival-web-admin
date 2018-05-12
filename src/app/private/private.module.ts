@@ -8,6 +8,7 @@ import { NewsModule } from './news/news.module';
 import { ClassLevelsModule } from './class-levels/class-levels.module';
 import { VenuesModule } from './venues/venues.module';
 import { InstructorsModule } from './instructors/instructors.module';
+import { EventsModule } from './events/events.module';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { InstructorsModule } from './instructors/instructors.module';
     NewsModule,
     ClassLevelsModule,
     VenuesModule,
-    InstructorsModule
+    InstructorsModule,
+    EventsModule
   ],
   declarations: []
 })
