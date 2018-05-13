@@ -18,7 +18,7 @@
         <img *ngIf="newsArticle.imageUrl" [src]="newsArticle.imageUrl" class="table-image"/>
       </td>
       <td>
-        {{newsArticle.postedOn * 1000 | date: 'yyyy-MM-dd hh:mm O' : 'Europe/Sofia'}}
+        {{newsArticle.postedOn * 1000 | date: 'yyyy-MM-dd HH:mm O' : 'Europe/Sofia'}}
       </td>
       <td>
         <div class="news-article-field">

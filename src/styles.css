@@ -85,3 +85,7 @@ textarea {
 .new-edit-section {
     margin-top: 10px;
 }
+
+.new-edit-section>div {
+    padding: 0.2em 0;
+}

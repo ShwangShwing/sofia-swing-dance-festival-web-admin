@@ -25,7 +25,8 @@ export class ClassLevelsService {
               dbClassLevels.forEach(dbClassLevel => {
                 const inDbClassLevel = dbClassLevel.payload.val();
                 const classLevel: ClassLevelModel = {
-                  id: `/${this.selectedSsdfYear}/classLevels/${dbClassLevel.key}`,
+                  id: `${this.selectedSsdfYear}/classLevels/${dbClassLevel.key}`,
+                  classLevelType: dbClassLevel.key,
                   name: inDbClassLevel.name || '',
                   position: inDbClassLevel.position || 0
                 };
@@ -42,7 +43,7 @@ export class ClassLevelsService {
     return this.classLevels$;
   }
 
-  delete(id): void {
+  delete(id: string): void {
     this.af.object(id).remove();
   }
 

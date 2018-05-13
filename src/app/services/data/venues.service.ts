@@ -4,6 +4,7 @@ import { VenueModel } from '../../models/venue.model';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { SsdfYearsService } from './ssdf-years.service';
 import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class VenuesService {
@@ -24,7 +25,7 @@ export class VenuesService {
               dbVenues.forEach(dbVenue => {
                 const inDbVenue = dbVenue.payload.val();
                 const venue: VenueModel = {
-                  id: `/${this.selectedSsdfYear}/venues/${dbVenue.key}`,
+                  id: `${this.selectedSsdfYear}/venues/${dbVenue.key}`,
                   name: inDbVenue.name || '',
                   imageUrl: inDbVenue.imageUrl || '',
                   youtubeUrl: inDbVenue.youtubeUrl || '',
@@ -42,7 +43,7 @@ export class VenuesService {
         });
   }
 
-  getAll() {
+  getAll(): Observable<VenueModel[]> {
     return this.venues;
   }
 

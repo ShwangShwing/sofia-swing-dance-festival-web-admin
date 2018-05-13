@@ -25,7 +25,7 @@ export class InstructorsService {
               dbInstructors.forEach(dbInstructor => {
                 const inDbInstructor = dbInstructor.payload.val();
                 const instructor: InstructorModel = {
-                  id: `/${this.selectedSsdfYear}/instructors/${dbInstructor.key}`,
+                  id: `${this.selectedSsdfYear}/instructors/${dbInstructor.key}`,
                   name: inDbInstructor.name || '',
                   imageUrl: inDbInstructor.imageUrl || '',
                   description: inDbInstructor.description,

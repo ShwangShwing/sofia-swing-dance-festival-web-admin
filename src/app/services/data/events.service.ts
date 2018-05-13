@@ -29,7 +29,15 @@ export class EventsService {
                   startTime: inDbEvent.start | 0,
                   endTime: inDbEvent.end | 0,
                   type: inDbEvent.type || 'misc',
-                  venueId: inDbEvent.venueId
+                  venueId: inDbEvent.venueId,
+                  classLevel:
+                    inDbEvent.type.startsWith('class_') ?
+                    inDbEvent.type.substr('class_'.length) :
+                    '',
+                  instructorIds: (
+                    inDbEvent.instructorIds ?
+                    Object.values(inDbEvent.instructorIds) :
+                    []) || []
                 };
                 outEvent.push(event);
               });
@@ -48,16 +56,106 @@ export class EventsService {
     this.af.object(id).remove();
   }
 
-  insert(event: EventModel): void {
-    const eventIdentifier = event.name.toLowerCase().replace(/[^0-9a-z]/gi, '');
-    this.af.object(`/${this.selectedSsdfYear}/events/${eventIdentifier}`).set(event);
+  updateClass(event: EventModel): void {
+    event.type = `class_${event.classLevel}`;
+    this.af.object(`${event.id}/instructorIds`).set(event.instructorIds);
+    this.update(event);
   }
 
-  update(event: EventModel): void {
+  updateTasterClass(event: EventModel): void {
+    event.type = `taster_class`;
+    this.af.object(`${event.id}/instructorIds`).set(event.instructorIds);
+    this.update(event);
+  }
+
+  updateParty(event: EventModel): void {
+    event.type = 'party';
+    this.update(event);
+  }
+
+  updateMisc(event: EventModel): void {
+    event.type = 'misc';
+    this.update(event);
+  }
+
+  insertClass(event: EventModel): void {
+    const fbEvent: FirebaseEventModel = {
+      name: event.name,
+      start: event.startTime,
+      end: event.endTime,
+      type: `class_${event.classLevel}`,
+      venueId: event.venueId,
+      instructorIds: event.instructorIds
+    };
+
+    this.insert(fbEvent);
+  }
+
+  insertTasterClass(event: EventModel): void {
+    const fbEvent: FirebaseEventModel = {
+      name: event.name,
+      start: event.startTime,
+      end: event.endTime,
+      type: 'taster_class',
+      venueId: event.venueId,
+      instructorIds: event.instructorIds
+    };
+
+    this.insert(fbEvent);
+  }
+
+  insertParty(event: EventModel): void {
+    const fbEvent: FirebaseEventModel = {
+      name: event.name,
+      start: event.startTime,
+      end: event.endTime,
+      type: 'party',
+      venueId: event.venueId
+    };
+
+    this.insert(fbEvent);
+  }
+
+  insertMisc(event: EventModel): void {
+    const fbEvent: FirebaseEventModel = {
+      name: event.name,
+      start: event.startTime,
+      end: event.endTime,
+      type: 'misc',
+      venueId: event.venueId
+    };
+
+    this.insert(fbEvent);
+  }
+
+  private insert(event: FirebaseEventModel): void {
+    if (!event.name) { return; }
+    if (!event.start) { return; }
+    if (!event.end) { return; }
+    if (!event.type) { return; }
+    if (!event.venueId) { return; }
+    this.af.list(`/${this.selectedSsdfYear}/events/`).push(event);
+  }
+
+  private update(event: EventModel): void {
+    if (!event.name) { return; }
+    if (!event.startTime) { return; }
+    if (!event.endTime) { return; }
+    if (!event.type) { return; }
+    if (!event.venueId) { return; }
     this.af.object(`${event.id}/name`).set(event.name);
-    this.af.object(`${event.id}/startTime`).set(event.startTime | 0);
-    this.af.object(`${event.id}/endTime`).set(event.endTime | 0);
+    this.af.object(`${event.id}/start`).set(event.startTime | 0);
+    this.af.object(`${event.id}/end`).set(event.endTime | 0);
     this.af.object(`${event.id}/type`).set(event.type);
     this.af.object(`${event.id}/venueId`).set(event.venueId);
   }
+}
+
+interface FirebaseEventModel {
+  name: string;
+  start: number;
+  end: number;
+  type: string;
+  venueId: string;
+  instructorIds?: string[];
 }

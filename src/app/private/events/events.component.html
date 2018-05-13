@@ -1,11 +1,13 @@
-Filter by type: 
-<select [(ngModel)]="eventTypeFilter">
-  <option value="">All</option>
-  <option value="class">Main class</option>
-  <option value="taster_class">Taster class</option>
-  <option value="party">Party</option>
-  <option value="misc">Misc</option>
-</select>
+<div class="filter-by-type">
+  <label for="filter-by-type">Filter by type:</label>
+  <select id="filter-by-type" [(ngModel)]="eventTypeFilter">
+    <option value="">All</option>
+    <option value="class">Main class</option>
+    <option value="taster_class">Taster class</option>
+    <option value="party">Party</option>
+    <option value="misc">Misc</option>
+  </select>
+</div>
 <table class="collection-table">
   <thead>
     <tr>
@@ -25,16 +27,16 @@ Filter by type:
           {{event.name}}
         </td>
         <td>
-          {{event.startTime * 1000 | date: 'yyyy-MM-dd hh:mm O' : 'Europe/Sofia'}}
+          {{event.startTime * 1000 | date: 'yyyy-MM-dd HH:mm O' : 'Europe/Sofia'}}
         </td>
         <td>
-          {{event.endTime * 1000 | date: 'yyyy-MM-dd hh:mm O' : 'Europe/Sofia'}}
+          {{event.endTime * 1000 | date: 'yyyy-MM-dd HH:mm O' : 'Europe/Sofia'}}
         </td>
         <td>
-          {{event.type}}
+          {{getEventTypeHumanString(event.type)}}
         </td>
         <td>
-          {{event.venueId}}
+          {{venues[event.venueId]?.name}}
         </td>
         <td>
           <button (click)="edit(event)">
@@ -57,5 +59,56 @@ Filter by type:
   <div>
     Event:
   </div>
-
+  <div>
+    <label for="type">Type:</label>
+    <select id="type" [(ngModel)]="newEditEventType">
+      <option value="class">Main class</option>
+      <option value="taster_class">Taster class</option>
+      <option value="party">Party</option>
+      <option value="misc">Misc</option>
+    </select>
+  </div>
+  <div>
+    <label for="name">Name: </label>
+    <input id="name" type="text" [(ngModel)]="newEditEventName">
+  </div>
+  <div>
+    <label for="start-time">Start time: </label>
+    <p-calendar id="start-time" [(ngModel)]="newEditStartTime" [locale]="dateLocale" dateFormat="yy-mm-dd" showTime="true" timeFormat="24"></p-calendar>
+    <span>({{newEditStartTime.getTime() | date: 'yyyy-MM-dd HH:mm O' : 'Europe/Sofia'}})</span>
+  </div>
+  <div>
+    <label for="end-time">End time: </label>
+    <p-calendar id="end-time" [(ngModel)]="newEditEndTime" [locale]="dateLocale" dateFormat="yy-mm-dd" showTime="true" timeFormat="24"></p-calendar>
+    <span>({{newEditEndTime.getTime() | date: 'yyyy-MM-dd HH:mm O' : 'Europe/Sofia'}})</span>
+  </div>
+  <div>
+    <label for="venue">Venue: </label>
+    <select id="venue" type="text" [(ngModel)]="newEditVenueId">
+      <option *ngFor="let venue of (venues$ | async)" [value]="venue.id">
+        {{venue.name}}
+      </option>
+    </select>
+  </div>
+  <div *ngIf="newEditEventType == 'class'">
+    <label for="class-level">Class level:</label>
+    <select id="class-level" type="text" [(ngModel)]="newEditClassLevel">
+      <option *ngFor="let classLevel of (classLevels$ | async)" [value]="classLevel.classLevelType">
+        {{classLevel.name}}
+      </option>
+    </select>
+  </div>
+  <div *ngIf="newEditEventType == 'class' || newEditEventType == 'taster_class'">
+    <label for="instructors">Instructors: </label>
+    <p-multiSelect id="instructors" 
+      [options]="instructors$ | async" 
+      [(ngModel)]="newEditInstructors"
+      optionLabel="name">
+    </p-multiSelect>
+  </div>
+  <div>
+    <button *ngIf="!editId" (click)="create()">Create</button>
+    <button *ngIf="editId" (click)="update()">Save</button>
+    <button (click)="resetNewEdit()">Cancel</button>
+  </div>
 </div>
