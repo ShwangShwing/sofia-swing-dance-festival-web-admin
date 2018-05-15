@@ -20,6 +20,8 @@ export class NewsComponent implements OnInit {
 
   ngOnInit() {
     this.newsArticles$ = this.newsService.getAll();
+
+    this.resetNewEdit();
   }
 
   publishArticle(articleId: string): void {

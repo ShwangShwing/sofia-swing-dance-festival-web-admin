@@ -24,6 +24,8 @@ export class VenuesComponent implements OnInit {
 
   ngOnInit() {
     this.venues$ = this.dataService.getAll();
+
+    this.resetNewEdit();
   }
 
   setForDeletion(id: string) {
