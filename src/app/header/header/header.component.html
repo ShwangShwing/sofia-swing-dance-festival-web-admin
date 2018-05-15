@@ -37,9 +37,6 @@
             <a routerLink="/private/venues">Venues</a>
         </li>
         <li *ngIf="(firebaseUser$ | async)?.uid" [routerLinkActive]="['active']">
-            <a routerLink="/private/class-levels">Class levels</a>
-        </li>
-        <li *ngIf="(firebaseUser$ | async)?.uid" [routerLinkActive]="['active']">
             <a routerLink="/public/logout">Logout {{(firebaseUser$ | async)?.email}}</a>
         </li>
     </ul>
