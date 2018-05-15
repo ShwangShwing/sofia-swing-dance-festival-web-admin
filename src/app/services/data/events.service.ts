@@ -134,6 +134,8 @@ export class EventsService {
     if (!event.end) { return; }
     if (!event.type) { return; }
     if (!event.venueId) { return; }
+    event.start = event.start | 0;
+    event.end = event.end | 0;
     this.af.list(`/${this.selectedSsdfYear}/events/`).push(event);
   }
 
