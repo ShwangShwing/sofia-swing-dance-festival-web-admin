@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
   firebaseConfig: {
-    apiKey: 'AIzaSyDJZsxa9UX1YzoUlqc-hotonfhQ0miptfw',
+    apiKey: 'AIzaSyDTA8-Q-4yNAlA9YYgFklkGBZyjTR34Sck',
     authDomain: 'sofia-swing-dance-festival.firebaseapp.com',
     databaseURL: 'https://sofia-swing-dance-festival.firebaseio.com',
     projectId: 'sofia-swing-dance-festival',
