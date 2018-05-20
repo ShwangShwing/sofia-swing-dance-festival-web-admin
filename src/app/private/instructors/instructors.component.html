@@ -60,9 +60,10 @@
   </div>
   <div>
     <div>
-      <label for="instructor-description">Instructor description: </label>
+      <label for="instructor-description">Instructor description url: </label>
+      <input type="text" id="instructor-description" [(ngModel)]="newEditInstructorDescription">
     </div>
-    <textarea id="instructor-description" [(ngModel)]="newEditInstructorDescription"></textarea>  
+    
   </div>
   <div>
       <label for="instructor-type">Instructor type: </label>
