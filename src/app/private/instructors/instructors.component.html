@@ -51,19 +51,26 @@
     Instructor:
   </div>
   <div>
-    <label for="instructor-image-url">Instructor image URL: </label>
-    <input type="text" id="instructor-image-url" [(ngModel)]="newEditInstructorImageUrl">
+    <img *ngIf="newEditInstructorImageUrl" [src]="newEditInstructorImageUrl" class="table-image" />
   </div>
   <div>
     <label for="instructor-name">Instructor name: </label>
     <input type="text" id="instructor-name" [(ngModel)]="newEditInstructorName">
   </div>
   <div>
+    <label for="instructor-image-url">Instructor image URL: </label>
+    <input type="text" id="instructor-image-url" [(ngModel)]="newEditInstructorImageUrl">
+  </div>
+  <div>
+    <label for="upload-image">Upload image: </label>
+    <input id="upload-image" type="file" (change)="fileChanged($event)" placeholder="Upload picture..."/>
+    <span *ngIf="isUploadingPicture">Uploading...</span>
+  </div>
+  <div>
     <div>
       <label for="instructor-description">Instructor description url: </label>
       <input type="text" id="instructor-description" [(ngModel)]="newEditInstructorDescription">
     </div>
-    
   </div>
   <div>
       <label for="instructor-type">Instructor type: </label>

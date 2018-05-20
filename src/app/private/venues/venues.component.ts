@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { VenueModel } from '../../models/venue.model';
 import { Observable } from 'rxjs/Observable';
 import { VenuesService } from '../../services/data/venues.service';
+import { UploadService } from '../../services/data/upload-service.service';
 
 @Component({
   selector: 'app-venues',
@@ -20,7 +21,9 @@ export class VenuesComponent implements OnInit {
   newEditVenuePosition: number;
   editId = '';
 
-  constructor(private dataService: VenuesService) { }
+  isUploadingPicture = false;
+
+  constructor(private dataService: VenuesService, private uploadService: UploadService) { }
 
   ngOnInit() {
     this.venues$ = this.dataService.getAll();
@@ -94,5 +97,21 @@ export class VenuesComponent implements OnInit {
     this.dataService.update(newVenue);
 
     this.resetNewEdit();
+  }
+
+  fileChanged(e: Event) {
+    const target: HTMLInputElement = e.target as HTMLInputElement;
+    const file = target.files[0];
+
+    const picIdentHelper = this.newEditVenueName.toLowerCase().replace(/[^0-9a-z]/gi, '');
+
+    this.isUploadingPicture = true;
+    this.uploadService.uploadVenuePicture(
+      `${picIdentHelper}-${Math.random() * 0x10000 | 0}`,
+      file)
+      .then(picUrl => {
+        this.newEditVenueImageUrl = picUrl;
+        this.isUploadingPicture = false;
+      });
   }
 }

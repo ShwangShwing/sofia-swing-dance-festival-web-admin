@@ -21,6 +21,7 @@ import { ClassLevelsService } from './services/data/class-levels.service';
 import { VenuesService } from './services/data/venues.service';
 import { InstructorsService } from './services/data/instructors.service';
 import { EventsService } from './services/data/events.service';
+import { UploadService } from './services/data/upload-service.service';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { EventsService } from './services/data/events.service';
     ClassLevelsService,
     VenuesService,
     InstructorsService,
-    EventsService],
+    EventsService,
+    UploadService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

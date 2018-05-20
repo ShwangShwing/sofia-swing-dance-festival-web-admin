@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { InstructorModel } from '../../models/instructor.model';
 import { InstructorsService } from '../../services/data/instructors.service';
+import { UploadService } from '../../services/data/upload-service.service';
 
 @Component({
   selector: 'app-instructors',
@@ -17,8 +18,10 @@ export class InstructorsComponent implements OnInit {
   newEditInstructorType: string;
   newEditInstructorPosition: number;
   editId = '';
+  isUploadingPicture = false;
 
-  constructor(private dataService: InstructorsService) { }
+  constructor(private dataService: InstructorsService,
+    private uploadService: UploadService) { }
 
   ngOnInit() {
     this.instructors$ = this.dataService.getAll();
@@ -83,5 +86,21 @@ export class InstructorsComponent implements OnInit {
     this.dataService.update(newInstructor);
 
     this.resetNewEdit();
+  }
+
+  fileChanged(e: Event) {
+    const target: HTMLInputElement = e.target as HTMLInputElement;
+    const file = target.files[0];
+
+    const picIdentHelper = this.newEditInstructorName.toLowerCase().replace(/[^0-9a-z]/gi, '');
+
+    this.isUploadingPicture = true;
+    this.uploadService.uploadInstructorPicture(
+      `${picIdentHelper}-${Math.random() * 0x10000 | 0}`,
+      file)
+      .then(picUrl => {
+        this.newEditInstructorImageUrl = picUrl;
+        this.isUploadingPicture = false;
+      });
   }
 }

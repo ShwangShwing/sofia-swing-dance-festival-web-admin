@@ -48,16 +48,24 @@
     Venue:
   </div>
   <div>
-    <label for="venue-image-url">Venue image URL: </label>
-    <input type="text" id="venue-image-url" [(ngModel)]="newEditVenueImageUrl">
-  </div>
-  <div>
-    <label for="venue-youtube-url">Venue youtube URL: </label>
-    <input type="text" id="venue-youtube-url" [(ngModel)]="newEditVenueYoutubeUrl">
+    <img *ngIf="newEditVenueImageUrl" [src]="newEditVenueImageUrl" class="table-image" />
   </div>
   <div>
     <label for="venue-name">Venue name: </label>
     <input type="text" id="venue-name" [(ngModel)]="newEditVenueName">
+  </div>
+  <div>
+    <label for="venue-image-url">Venue image URL: </label>
+    <input type="text" id="venue-image-url" [(ngModel)]="newEditVenueImageUrl">
+  </div>
+  <div>
+    <label for="upload-image">Upload image: </label>
+    <input id="upload-image" type="file" (change)="fileChanged($event)" placeholder="Upload picture..." />
+    <span *ngIf="isUploadingPicture">Uploading...</span>
+  </div>
+  <div>
+    <label for="venue-youtube-url">Venue youtube URL: </label>
+    <input type="text" id="venue-youtube-url" [(ngModel)]="newEditVenueYoutubeUrl">
   </div>
   <div>
     <label for="venue-address">Venue address: </label>
