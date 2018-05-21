@@ -56,6 +56,9 @@
       New news article:
     </div>
     <div>
+      <img *ngIf="newEditArticleImageUrl" [src]="newEditArticleImageUrl" class="table-image" />
+    </div>
+    <div>
       <label for="image-url">Image URL: </label>
       <input type="text" id="image-url" [(ngModel)]="newEditArticleImageUrl">
     </div>
