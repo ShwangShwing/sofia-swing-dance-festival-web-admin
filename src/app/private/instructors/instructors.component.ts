@@ -78,7 +78,7 @@ export class InstructorsComponent implements OnInit {
       id: this.editId,
       imageUrl: this.newEditInstructorImageUrl,
       name: this.newEditInstructorName,
-      description: this.newEditInstructorImageUrl,
+      description: this.newEditInstructorDescription,
       type: this.newEditInstructorType,
       position: this.newEditInstructorPosition | 0
     };
