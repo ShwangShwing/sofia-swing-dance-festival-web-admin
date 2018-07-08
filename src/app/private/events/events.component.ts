@@ -24,6 +24,7 @@ export class EventsComponent implements OnInit, OnDestroy {
   instructors$: Observable<InstructorModel[]>;
   instructors: { [instructorId: string]: InstructorModel } = {};
   eventTypeFilter = '';
+  classLevelFilter = '';
   deleteId: string;
   editId = '';
   newEditEventType = 'class';
@@ -104,8 +105,6 @@ export class EventsComponent implements OnInit, OnDestroy {
       const classLevel = eventType.substr('class_'.length);
       const classLevelName = this.classLevels[classLevel] ? this.classLevels[classLevel].name : '';
       return `Class ${classLevelName}`;
-    } else if (eventType.startsWith('taster_class')) {
-      return 'Taster class';
     } else if (eventType.startsWith('party')) {
       return 'Party';
     } else {
@@ -181,9 +180,6 @@ export class EventsComponent implements OnInit, OnDestroy {
       newEvent.classLevel = this.newEditClassLevel;
       fillInstructors(newEvent, this.newEditInstructors);
       this.dataService.insertClass(newEvent);
-    } else if (eventType.startsWith('taster_class')) {
-      fillInstructors(newEvent, this.newEditInstructors);
-      this.dataService.insertTasterClass(newEvent);
     } else if (eventType.startsWith('party')) {
       this.dataService.insertParty(newEvent);
     } else {
@@ -206,7 +202,7 @@ export class EventsComponent implements OnInit, OnDestroy {
     }
 
     this.newEditInstructors = [];
-    if (this.newEditEventType === 'class' || this.newEditEventType === 'taster_class') {
+    if (this.newEditEventType === 'class') {
       editedModel.instructorIds.forEach(instructorId => {
         this.newEditInstructors.push(this.instructors[instructorId]);
       });
@@ -239,9 +235,6 @@ export class EventsComponent implements OnInit, OnDestroy {
       newEvent.classLevel = this.newEditClassLevel;
       fillInstructors(newEvent, this.newEditInstructors);
       this.dataService.updateClass(newEvent);
-    } else if (eventType.startsWith('taster_class')) {
-      fillInstructors(newEvent, this.newEditInstructors);
-      this.dataService.updateTasterClass(newEvent);
     } else if (eventType.startsWith('party')) {
       this.dataService.updateParty(newEvent);
     } else {
@@ -249,5 +242,14 @@ export class EventsComponent implements OnInit, OnDestroy {
     }
 
     this.resetNewEdit();
+  }
+
+  shouldShowEventByFilter(eventType: string, eventTypeFilter: string, classLevelFilter: string = ''): boolean {
+    let shouldShow = eventType.startsWith(eventTypeFilter);
+    if (eventTypeFilter === 'class') {
+      shouldShow = eventType.endsWith(classLevelFilter);
+    }
+
+    return shouldShow;
   }
 }

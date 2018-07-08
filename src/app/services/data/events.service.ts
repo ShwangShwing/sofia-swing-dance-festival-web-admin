@@ -62,12 +62,6 @@ export class EventsService {
     this.update(event);
   }
 
-  updateTasterClass(event: EventModel): void {
-    event.type = `taster_class`;
-    this.af.object(`${event.id}/instructorIds`).set(event.instructorIds);
-    this.update(event);
-  }
-
   updateParty(event: EventModel): void {
     event.type = 'party';
     this.update(event);
@@ -84,19 +78,6 @@ export class EventsService {
       start: event.startTime,
       end: event.endTime,
       type: `class_${event.classLevel}`,
-      venueId: event.venueId,
-      instructorIds: event.instructorIds
-    };
-
-    this.insert(fbEvent);
-  }
-
-  insertTasterClass(event: EventModel): void {
-    const fbEvent: FirebaseEventModel = {
-      name: event.name,
-      start: event.startTime,
-      end: event.endTime,
-      type: 'taster_class',
       venueId: event.venueId,
       instructorIds: event.instructorIds
     };

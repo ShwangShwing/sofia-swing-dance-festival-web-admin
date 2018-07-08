@@ -2,10 +2,18 @@
   <label for="filter-by-type">Filter by type:</label>
   <select id="filter-by-type" [(ngModel)]="eventTypeFilter">
     <option value="">All</option>
-    <option value="class">Main class</option>
-    <option value="taster_class">Taster class</option>
+    <option value="class">Class</option>
     <option value="party">Party</option>
     <option value="misc">Misc</option>
+  </select>
+</div>
+<div *ngIf="eventTypeFilter == 'class'" class="filter-by-class-level">
+  <label for="filter-by-class-level">Filter by type:</label>
+  <select id="filter-by-class-level" [(ngModel)]="classLevelFilter">
+    <option value="">All</option>
+    <option *ngFor="let classLevel of (classLevels$ | async)" [value]="classLevel.classLevelType">
+      {{classLevel.name}}
+    </option>
   </select>
 </div>
 <table class="collection-table">
@@ -22,7 +30,7 @@
   </thead>
   <tbody>
     <ng-container *ngFor="let event of (events$ | async)">
-      <tr *ngIf="event.type.startsWith(eventTypeFilter)" class="item-row" [class.item-for-deletion]="event.id == deleteId" [class.edited-item]="event.id == editId">
+      <tr *ngIf="shouldShowEventByFilter(event.type, eventTypeFilter, classLevelFilter)" class="item-row" [class.item-for-deletion]="event.id == deleteId" [class.edited-item]="event.id == editId">
         <td>
           {{event.name}}
         </td>
@@ -62,8 +70,7 @@
   <div>
     <label for="type">Type:</label>
     <select id="type" [(ngModel)]="newEditEventType">
-      <option value="class">Main class</option>
-      <option value="taster_class">Taster class</option>
+      <option value="class">Class</option>
       <option value="party">Party</option>
       <option value="misc">Misc</option>
     </select>
@@ -98,7 +105,7 @@
       </option>
     </select>
   </div>
-  <div *ngIf="newEditEventType == 'class' || newEditEventType == 'taster_class'">
+  <div *ngIf="newEditEventType == 'class'">
     <label for="instructors">Instructors: </label>
     <p-multiSelect id="instructors" 
       [options]="instructors$ | async" 
