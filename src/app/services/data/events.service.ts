@@ -29,6 +29,7 @@ export class EventsService {
                   startTime: inDbEvent.start | 0,
                   endTime: inDbEvent.end | 0,
                   type: inDbEvent.type || 'misc',
+                  description: inDbEvent.description || '',
                   venueId: inDbEvent.venueId,
                   classLevel:
                     inDbEvent.type.startsWith('class_') ?
@@ -75,6 +76,7 @@ export class EventsService {
   insertClass(event: EventModel): void {
     const fbEvent: FirebaseEventModel = {
       name: event.name,
+      description: event.description,
       start: event.startTime,
       end: event.endTime,
       type: `class_${event.classLevel}`,
@@ -88,6 +90,7 @@ export class EventsService {
   insertParty(event: EventModel): void {
     const fbEvent: FirebaseEventModel = {
       name: event.name,
+      description: event.description,
       start: event.startTime,
       end: event.endTime,
       type: 'party',
@@ -100,6 +103,7 @@ export class EventsService {
   insertMisc(event: EventModel): void {
     const fbEvent: FirebaseEventModel = {
       name: event.name,
+      description: event.description,
       start: event.startTime,
       end: event.endTime,
       type: 'misc',
@@ -127,6 +131,7 @@ export class EventsService {
     if (!event.type) { return; }
     if (!event.venueId) { return; }
     this.af.object(`${event.id}/name`).set(event.name);
+    this.af.object(`${event.id}/description`).set(event.description);
     this.af.object(`${event.id}/start`).set(event.startTime | 0);
     this.af.object(`${event.id}/end`).set(event.endTime | 0);
     this.af.object(`${event.id}/type`).set(event.type);
@@ -136,6 +141,7 @@ export class EventsService {
 
 interface FirebaseEventModel {
   name: string;
+  description: string;
   start: number;
   end: number;
   type: string;

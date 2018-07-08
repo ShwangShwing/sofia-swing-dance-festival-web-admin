@@ -10,12 +10,16 @@ export class SsdfYearsService {
   private isSelectedSsdfYearInit = false;
 
   constructor(private af: AngularFireDatabase) {
-    this.af.object<string>('/activeSsdfYear').valueChanges().subscribe(activeSsdfYear => {
-      if (!this.isSelectedSsdfYearInit) {
-        this.selectedSsdfYear$.next(activeSsdfYear);
-        this.isSelectedSsdfYearInit = true;
-      }
-    });
+    const savedSelectedSsdfYear = localStorage['selected-ssdf-year'];
+    if (savedSelectedSsdfYear) {
+      this.setSelectedSsdfYear(savedSelectedSsdfYear);
+    } else {
+      this.af.object<string>('/activeSsdfYear').valueChanges().subscribe(activeSsdfYear => {
+        if (!this.isSelectedSsdfYearInit) {
+          this.setSelectedSsdfYear(activeSsdfYear);
+        }
+      });
+    }
   }
 
   getAll(): Observable<string[]> {
@@ -38,6 +42,7 @@ export class SsdfYearsService {
   setSelectedSsdfYear(selectedSsdfYear: string): void {
     this.selectedSsdfYear$.next(selectedSsdfYear);
     this.isSelectedSsdfYearInit = true;
+    localStorage['selected-ssdf-year'] = selectedSsdfYear;
   }
 
   setActiveSsdfYear(activeSsdfYear: string): void {

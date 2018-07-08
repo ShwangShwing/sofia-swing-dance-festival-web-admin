@@ -80,6 +80,10 @@
     <input id="name" type="text" [(ngModel)]="newEditEventName">
   </div>
   <div>
+    <label for="description">Description: </label>
+    <textarea id="description" [(ngModel)]="newEditEventDescription"></textarea>
+  </div>
+  <div>
     <label for="start-time">Start time: </label>
     <p-calendar id="start-time" [(ngModel)]="newEditStartTime" [locale]="dateLocale" dateFormat="yy-mm-dd" showTime="true" timeFormat="24"></p-calendar>
     <span>({{newEditStartTime.getTime() | date: 'yyyy-MM-dd HH:mm O' : 'Europe/Sofia'}})</span>

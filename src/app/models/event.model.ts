@@ -4,6 +4,7 @@ export interface EventModel {
     startTime: number;
     endTime: number;
     type: string;
+    description: string;
     venueId: string;
     classLevel?: string;
     instructorIds?: string[];

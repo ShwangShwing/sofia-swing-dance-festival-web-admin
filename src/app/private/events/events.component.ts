@@ -29,6 +29,7 @@ export class EventsComponent implements OnInit, OnDestroy {
   editId = '';
   newEditEventType = 'class';
   newEditEventName: string;
+  newEditEventDescription: string;
   newEditStartTime: Date;
   newEditEndTime: Date;
   newEditVenueId: string;
@@ -147,6 +148,7 @@ export class EventsComponent implements OnInit, OnDestroy {
 
     this.newEditEventType = 'class';
     this.newEditEventName = '';
+    this.newEditEventDescription = '';
     this.newEditStartTime = new Date();
     this.newEditEndTime = new Date();
     this.newEditVenueId = '';
@@ -165,6 +167,7 @@ export class EventsComponent implements OnInit, OnDestroy {
     const newEvent: EventModel = {
       id: this.editId,
       name: this.newEditEventName,
+      description: this.newEditEventDescription,
       startTime: this.newEditStartTime.getTime() / 1000,
       endTime: this.newEditEndTime.getTime() / 1000,
       venueId: this.newEditVenueId,
@@ -193,6 +196,7 @@ export class EventsComponent implements OnInit, OnDestroy {
     this.editId = editedModel.id;
     this.newEditEventType = this.getEventTypePreffix(editedModel.type);
     this.newEditEventName = editedModel.name;
+    this.newEditEventDescription = editedModel.description;
     this.newEditStartTime = new Date(editedModel.startTime * 1000);
     this.newEditEndTime = new Date(editedModel.endTime * 1000);
     this.newEditVenueId = editedModel.venueId;
@@ -220,6 +224,7 @@ export class EventsComponent implements OnInit, OnDestroy {
     const newEvent: EventModel = {
       id: this.editId,
       name: this.newEditEventName,
+      description: this.newEditEventDescription,
       startTime: this.newEditStartTime.getTime() / 1000,
       endTime: this.newEditEndTime.getTime() / 1000,
       venueId: this.newEditVenueId,
