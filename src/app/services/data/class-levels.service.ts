@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ClassLevelModel } from '../../models/class-level.model';
 import { Observable } from 'rxjs/Observable';
+import { map, switchMap, first } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 import { AngularFireDatabase } from 'angularfire2/database';
@@ -9,33 +10,28 @@ import { SsdfYearsService } from './ssdf-years.service';
 @Injectable()
 export class ClassLevelsService {
   private classLevels$ = new BehaviorSubject<ClassLevelModel[]>([]);
-  private selectedSsdfYear = '';
   constructor(private af: AngularFireDatabase,
     private ssdfYearsService: SsdfYearsService) {
-      let classLevelsSubscr = new Subscription();
+      // let classLevelsSubscr = new Subscription();
       this.ssdfYearsService.getSelectedSsdfYear()
-        .subscribe(selectedSsdfYear => {
-          this.selectedSsdfYear = selectedSsdfYear;
-          classLevelsSubscr.unsubscribe();
-          classLevelsSubscr = this.af
-            .list(`/${this.selectedSsdfYear}/classLevels`)
-            .snapshotChanges()
-            .subscribe(dbClassLevels => {
-              const outClassLevels: ClassLevelModel[] = [];
-              dbClassLevels.forEach(dbClassLevel => {
-                const inDbClassLevel = dbClassLevel.payload.val();
-                const classLevel: ClassLevelModel = {
-                  id: `${this.selectedSsdfYear}/classLevels/${dbClassLevel.key}`,
-                  classLevelType: dbClassLevel.key,
-                  name: inDbClassLevel.name || '',
-                  position: inDbClassLevel.position || 0
-                };
-                outClassLevels.push(classLevel);
-              });
+        .switchMap(ssdfYear => {
+          return this.af.list(`/${ssdfYear}/classLevels`)
+            .snapshotChanges().map(dbClassLevels => ({ ssdfYear, dbClassLevels }));
+        }).subscribe(({ssdfYear, dbClassLevels}) => {
+          const outClassLevels: ClassLevelModel[] = [];
+          dbClassLevels.forEach(dbClassLevel => {
+            const inDbClassLevel = dbClassLevel.payload.val();
+            const classLevel: ClassLevelModel = {
+              id: `${ssdfYear}/classLevels/${dbClassLevel.key}`,
+              classLevelType: dbClassLevel.key,
+              name: inDbClassLevel.name || '',
+              position: inDbClassLevel.position || 0
+            };
+            outClassLevels.push(classLevel);
+          });
 
-              outClassLevels.sort((left, right) => left.position - right.position);
-              this.classLevels$.next(outClassLevels);
-            });
+          outClassLevels.sort((left, right) => left.position - right.position);
+          this.classLevels$.next(outClassLevels);
         });
   }
 
@@ -53,7 +49,10 @@ export class ClassLevelsService {
       throw new Error('Put more valid name!');
     }
 
-    this.af.object(`/${this.selectedSsdfYear}/classLevels/${classLevelIdentifier}`).set(classLevel);
+    this.ssdfYearsService.getSelectedSsdfYear().first()
+    .subscribe(ssdfYear => {
+      this.af.object(`/${ssdfYear}/classLevels/${classLevelIdentifier}`).set(classLevel);
+    });
   }
 
   update(classLevel: ClassLevelModel): void {

@@ -3,44 +3,39 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { VenueModel } from '../../models/venue.model';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { SsdfYearsService } from './ssdf-years.service';
-import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class VenuesService {
   private venues = new BehaviorSubject<VenueModel[]>([]);
-  private selectedSsdfYear = '';
   constructor(private af: AngularFireDatabase,
     private ssdfYearsService: SsdfYearsService) {
-      let classLevelsSubscr = new Subscription();
-      this.ssdfYearsService.getSelectedSsdfYear()
-        .subscribe(selectedSsdfYear => {
-          this.selectedSsdfYear = selectedSsdfYear;
-          classLevelsSubscr.unsubscribe();
-          classLevelsSubscr = this.af
-            .list(`/${this.selectedSsdfYear}/venues`)
-            .snapshotChanges()
-            .subscribe(dbVenues => {
-              const outClassLevels: VenueModel[] = [];
-              dbVenues.forEach(dbVenue => {
-                const inDbVenue = dbVenue.payload.val();
-                const venue: VenueModel = {
-                  id: `${this.selectedSsdfYear}/venues/${dbVenue.key}`,
-                  name: inDbVenue.name || '',
-                  imageUrl: inDbVenue.imageUrl || '',
-                  youtubeUrl: inDbVenue.youtubeUrl || '',
-                  address: inDbVenue.address || '',
-                  latitude: +inDbVenue.latitude || 0,
-                  longitude: +inDbVenue.longitude || 0,
-                  position: inDbVenue.position || 0
-                };
-                outClassLevels.push(venue);
-              });
-
-              outClassLevels.sort((left, right) => left.position - right.position);
-              this.venues.next(outClassLevels);
-            });
+    this.ssdfYearsService.getSelectedSsdfYear()
+      .switchMap(ssdfYear => {
+        return this.af
+          .list(`/${ssdfYear}/venues`)
+          .snapshotChanges().map(dbVenues => ({ ssdfYear, dbVenues }));
+      })
+      .subscribe(({ ssdfYear, dbVenues }) => {
+        const outClassLevels: VenueModel[] = [];
+        dbVenues.forEach(dbVenue => {
+          const inDbVenue = dbVenue.payload.val();
+          const venue: VenueModel = {
+            id: `${ssdfYear}/venues/${dbVenue.key}`,
+            name: inDbVenue.name || '',
+            imageUrl: inDbVenue.imageUrl || '',
+            youtubeUrl: inDbVenue.youtubeUrl || '',
+            address: inDbVenue.address || '',
+            latitude: +inDbVenue.latitude || 0,
+            longitude: +inDbVenue.longitude || 0,
+            position: inDbVenue.position || 0
+          };
+          outClassLevels.push(venue);
         });
+
+        outClassLevels.sort((left, right) => left.position - right.position);
+        this.venues.next(outClassLevels);
+      });
   }
 
   getAll(): Observable<VenueModel[]> {
@@ -52,7 +47,8 @@ export class VenuesService {
   }
 
   insert(venue: VenueModel): void {
-    this.af.list(`/${this.selectedSsdfYear}/venues`).push(venue);
+    this.ssdfYearsService.getSelectedSsdfYear().first()
+    .subscribe(ssdfYear => this.af.list(`/${ssdfYear}/venues`).push(venue));
   }
 
   update(venue: VenueModel): void {

@@ -3,49 +3,44 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { EventModel } from '../../models/event.model';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { SsdfYearsService } from './ssdf-years.service';
-import { Subscription } from 'rxjs/Subscription';
 
 @Injectable()
 export class EventsService {
   private events = new BehaviorSubject<EventModel[]>([]);
-  private selectedSsdfYear = '';
   constructor(private af: AngularFireDatabase,
     private ssdfYearsService: SsdfYearsService) {
-      let eventsSubscr = new Subscription();
       this.ssdfYearsService.getSelectedSsdfYear()
-        .subscribe(selectedSsdfYear => {
-          this.selectedSsdfYear = selectedSsdfYear;
-          eventsSubscr.unsubscribe();
-          eventsSubscr = this.af
-            .list(`/${this.selectedSsdfYear}/events`)
-            .snapshotChanges()
-            .subscribe(dbEvents => {
-              const outEvent: EventModel[] = [];
-              dbEvents.forEach(dbEvent => {
-                const inDbEvent = dbEvent.payload.val();
-                const event: EventModel = {
-                  id: `/${this.selectedSsdfYear}/events/${dbEvent.key}`,
-                  name: inDbEvent.name || '',
-                  startTime: inDbEvent.start | 0,
-                  endTime: inDbEvent.end | 0,
-                  type: inDbEvent.type || 'misc',
-                  description: inDbEvent.description || '',
-                  venueId: inDbEvent.venueId,
-                  classLevel:
-                    inDbEvent.type.startsWith('class_') ?
-                    inDbEvent.type.substr('class_'.length) :
-                    '',
-                  instructorIds: (
-                    inDbEvent.instructorIds ?
-                    Object.values(inDbEvent.instructorIds) :
-                    []) || []
-                };
-                outEvent.push(event);
-              });
+        .switchMap(ssdfYear => {
+          return this.af
+            .list(`/${ssdfYear}/events`)
+            .snapshotChanges().map(dbEvents => ({ssdfYear, dbEvents}))
+        })
+        .subscribe(({ssdfYear, dbEvents}) => {
+          const outEvent: EventModel[] = [];
+          dbEvents.forEach(dbEvent => {
+            const inDbEvent = dbEvent.payload.val();
+            const event: EventModel = {
+              id: `/${ssdfYear}/events/${dbEvent.key}`,
+              name: inDbEvent.name || '',
+              startTime: inDbEvent.start | 0,
+              endTime: inDbEvent.end | 0,
+              type: inDbEvent.type || 'misc',
+              description: inDbEvent.description || '',
+              venueId: inDbEvent.venueId,
+              classLevel:
+                inDbEvent.type.startsWith('class_') ?
+                inDbEvent.type.substr('class_'.length) :
+                '',
+              instructorIds: (
+                inDbEvent.instructorIds ?
+                Object.values(inDbEvent.instructorIds) :
+                []) || []
+            };
+            outEvent.push(event);
+          });
 
-              outEvent.sort((left, right) => left.startTime - right.startTime);
-              this.events.next(outEvent);
-            });
+          outEvent.sort((left, right) => left.startTime - right.startTime);
+          this.events.next(outEvent);
         });
   }
 
@@ -121,7 +116,10 @@ export class EventsService {
     if (!event.venueId) { return; }
     event.start = event.start | 0;
     event.end = event.end | 0;
-    this.af.list(`/${this.selectedSsdfYear}/events/`).push(event);
+    this.ssdfYearsService.getSelectedSsdfYear().first()
+    .subscribe(ssdfYear => {
+      this.af.list(`/${ssdfYear}/events/`).push(event);
+    });
   }
 
   private update(event: EventModel): void {
