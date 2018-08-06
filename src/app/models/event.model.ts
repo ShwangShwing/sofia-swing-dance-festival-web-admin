@@ -8,4 +8,6 @@ export interface EventModel {
     venueId: string;
     classLevel?: string;
     instructorIds?: string[];
+    competitionType?: string;
+    competitionWinners?: string[];
 }

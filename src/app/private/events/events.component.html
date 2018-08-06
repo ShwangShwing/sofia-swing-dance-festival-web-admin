@@ -3,6 +3,7 @@
   <select id="filter-by-type" [(ngModel)]="eventTypeFilter">
     <option value="">All</option>
     <option value="class">Class</option>
+    <option value="competition">Competition</option>
     <option value="party">Party</option>
     <option value="misc">Misc</option>
   </select>
@@ -71,6 +72,7 @@
     <label for="type">Type:</label>
     <select id="type" [(ngModel)]="newEditEventType">
       <option value="class">Class</option>
+      <option value="competition">Competition</option>
       <option value="party">Party</option>
       <option value="misc">Misc</option>
     </select>
@@ -106,6 +108,14 @@
     <select id="class-level" type="text" [(ngModel)]="newEditClassLevel">
       <option *ngFor="let classLevel of (classLevels$ | async)" [value]="classLevel.classLevelType">
         {{classLevel.name}}
+      </option>
+    </select>
+  </div>
+  <div *ngIf="newEditEventType == 'competition'">
+    <label for="competition-type">Competition type:</label>
+    <select id="competition-type" type="text" [(ngModel)]="newEditCompetitionType">
+      <option *ngFor="let competitionType of (competitionTypes$ | async)" [value]="competitionType.competitionType">
+        {{competitionType.name}}
       </option>
     </select>
   </div>

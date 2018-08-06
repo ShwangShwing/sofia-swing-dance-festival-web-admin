@@ -3,7 +3,6 @@ import { ClassLevelModel } from '../../models/class-level.model';
 import { Observable } from 'rxjs/Observable';
 import { map, switchMap, first } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subscription } from 'rxjs/Subscription';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { SsdfYearsService } from './ssdf-years.service';
 
@@ -12,7 +11,6 @@ export class ClassLevelsService {
   private classLevels$ = new BehaviorSubject<ClassLevelModel[]>([]);
   constructor(private af: AngularFireDatabase,
     private ssdfYearsService: SsdfYearsService) {
-      // let classLevelsSubscr = new Subscription();
       this.ssdfYearsService.getSelectedSsdfYear()
         .switchMap(ssdfYear => {
           return this.af.list(`/${ssdfYear}/classLevels`)

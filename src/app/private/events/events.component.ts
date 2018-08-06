@@ -9,6 +9,8 @@ import { VenueModel } from '../../models/venue.model';
 import { Subscription } from 'rxjs/Subscription';
 import { InstructorModel } from '../../models/instructor.model';
 import { InstructorsService } from '../../services/data/instructors.service';
+import { CompetitionTypeModel } from '../../models/competition-type.model';
+import { CompetitionTypesService } from '../../services/data/competition-type.service';
 
 @Component({
   selector: 'app-events',
@@ -19,6 +21,8 @@ export class EventsComponent implements OnInit, OnDestroy {
   events$: Observable<EventModel[]>;
   classLevels$: Observable<ClassLevelModel[]>;
   classLevels: { [classLevelType: string]: ClassLevelModel } = {};
+  competitionTypes$: Observable<CompetitionTypeModel[]>;
+  competitionTypes: { [competitionType: string]: CompetitionTypeModel } = {};
   venues$: Observable<VenueModel[]>;
   venues: { [venueId: string]: VenueModel };
   instructors$: Observable<InstructorModel[]>;
@@ -34,6 +38,7 @@ export class EventsComponent implements OnInit, OnDestroy {
   newEditEndTime: Date;
   newEditVenueId: string;
   newEditClassLevel: string;
+  newEditCompetitionType: string;
   newEditInstructors: InstructorModel[];
 
   dateLocale: any;
@@ -43,6 +48,7 @@ export class EventsComponent implements OnInit, OnDestroy {
   constructor(
     private dataService: EventsService,
     private classLevelsService: ClassLevelsService,
+    private competitionTypesService: CompetitionTypesService,
     private venuesService: VenuesService,
     private instructorsServide: InstructorsService) { }
 
@@ -64,6 +70,7 @@ export class EventsComponent implements OnInit, OnDestroy {
 
     this.events$ = this.dataService.getAll();
     this.classLevels$ = this.classLevelsService.getAll();
+    this.competitionTypes$ = this.competitionTypesService.getAll();
     this.venues$ = this.venuesService.getAll();
     this.instructors$ = this.instructorsServide.getAll();
 
@@ -72,6 +79,15 @@ export class EventsComponent implements OnInit, OnDestroy {
         this.classLevels = {};
         classLevels.forEach(classLevel => {
           this.classLevels[classLevel.classLevelType] = classLevel;
+        });
+      })
+    );
+
+    this.eventsSubscr.add(
+      this.competitionTypes$.subscribe(competitionTypes => {
+        this.competitionTypes = {};
+        competitionTypes.forEach(competitionType => {
+          this.competitionTypes[competitionType.competitionType] = competitionType;
         });
       })
     );
@@ -122,9 +138,22 @@ export class EventsComponent implements OnInit, OnDestroy {
     return '';
   }
 
+  getCompetitionType(eventType: string): string {
+    if (eventType.startsWith('competition_')) {
+      const competitionType = eventType.substr('competition_'.length);
+      return `${competitionType}`;
+    }
+
+    return '';
+  }
+
   getEventTypePreffix(eventType: string): string {
     if (eventType.startsWith('class_')) {
       return 'class';
+    }
+
+    if (eventType.startsWith('competition_')) {
+      return 'competition';
     }
 
     return eventType.slice();
@@ -183,6 +212,9 @@ export class EventsComponent implements OnInit, OnDestroy {
       newEvent.classLevel = this.newEditClassLevel;
       fillInstructors(newEvent, this.newEditInstructors);
       this.dataService.insertClass(newEvent);
+    } else if (eventType.startsWith('competition')) {
+      newEvent.competitionType = this.newEditCompetitionType;
+      this.dataService.insertCompetition(newEvent);
     } else if (eventType.startsWith('party')) {
       this.dataService.insertParty(newEvent);
     } else {
@@ -203,6 +235,10 @@ export class EventsComponent implements OnInit, OnDestroy {
     this.newEditClassLevel = '';
     if (this.newEditEventType === 'class') {
       this.newEditClassLevel = this.getClassLevel(editedModel.type);
+    }
+
+    if (this.newEditEventType === 'competition') {
+      this.newEditCompetitionType = this.getCompetitionType(editedModel.type);
     }
 
     this.newEditInstructors = [];
@@ -240,6 +276,9 @@ export class EventsComponent implements OnInit, OnDestroy {
       newEvent.classLevel = this.newEditClassLevel;
       fillInstructors(newEvent, this.newEditInstructors);
       this.dataService.updateClass(newEvent);
+    } else if (eventType.startsWith('competition')) {
+      newEvent.competitionType = this.newEditCompetitionType;
+      this.dataService.updateCompetition(newEvent);
     } else if (eventType.startsWith('party')) {
       this.dataService.updateParty(newEvent);
     } else {

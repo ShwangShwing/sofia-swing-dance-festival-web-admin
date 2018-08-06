@@ -1,0 +1,56 @@
+<table class="collection-table">
+  <thead>
+    <tr>
+      <td>Name</td>
+      <td>Order position</td>
+      <td>Edit</td>
+      <td>Delete</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let competitionType of (competitionTypes$ | async)" class="item-row" [class.item-for-deletion]="competitionType.id == deleteId"
+      [class.edited-item]="competitionType.id == editId">
+      <td>
+        {{competitionType.name}}
+      </td>
+      <td>
+        <div>
+          {{competitionType.position}}
+        </div>
+      </td>
+      <td>
+        <div>
+          <button (click)="edit(competitionType)">
+            Edit
+          </button>
+        </div>
+      </td>
+      <td>
+        <button *ngIf="deleteId != competitionType.id" (click)="setForDeletion(competitionType.id)">Delete</button>
+        <button *ngIf="deleteId == competitionType.id" (click)="cancelDeletion()">Don't delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div *ngIf="deleteId">
+  <button (click)="delete()">Delete selected</button>
+  <button (click)="cancelDeletion()">Don't delete</button>
+</div>
+<div class="new-edit-section">
+  <div>
+    Competition type:
+  </div>
+  <div>
+    <label for="name">Competition type name: </label>
+    <input type="text" id="name" [(ngModel)]="newEditCompetitionTypeName">
+  </div>
+  <div>
+    <label for="position">Competition type sort position: </label>
+    <input type="number" id="position" [(ngModel)]="newEditCompetitionTypePosition">
+  </div>
+  <div>
+    <button *ngIf="!editId" (click)="create()">Create</button>
+    <button *ngIf="editId" (click)="update()">Save</button>
+    <button (click)="resetNewEdit()">Cancel</button>
+  </div>
+</div>

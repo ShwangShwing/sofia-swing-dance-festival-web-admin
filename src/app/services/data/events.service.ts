@@ -13,7 +13,7 @@ export class EventsService {
         .switchMap(ssdfYear => {
           return this.af
             .list(`/${ssdfYear}/events`)
-            .snapshotChanges().map(dbEvents => ({ssdfYear, dbEvents}))
+            .snapshotChanges().map(dbEvents => ({ssdfYear, dbEvents}));
         })
         .subscribe(({ssdfYear, dbEvents}) => {
           const outEvent: EventModel[] = [];
@@ -58,6 +58,12 @@ export class EventsService {
     this.update(event);
   }
 
+  updateCompetition(event: EventModel): void {
+    event.type = `competition_${event.competitionType}`;
+    // winners
+    this.update(event);
+  }
+
   updateParty(event: EventModel): void {
     event.type = 'party';
     this.update(event);
@@ -77,6 +83,19 @@ export class EventsService {
       type: `class_${event.classLevel}`,
       venueId: event.venueId,
       instructorIds: event.instructorIds
+    };
+
+    this.insert(fbEvent);
+  }
+
+  insertCompetition(event: EventModel): void {
+    const fbEvent: FirebaseEventModel = {
+      name: event.name,
+      description: event.description,
+      start: event.startTime,
+      end: event.endTime,
+      type: `competition_${event.competitionType}`,
+      venueId: event.venueId
     };
 
     this.insert(fbEvent);

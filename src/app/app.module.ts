@@ -22,6 +22,7 @@ import { VenuesService } from './services/data/venues.service';
 import { InstructorsService } from './services/data/instructors.service';
 import { EventsService } from './services/data/events.service';
 import { UploadService } from './services/data/upload-service.service';
+import { CompetitionTypesService } from './services/data/competition-type.service';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { UploadService } from './services/data/upload-service.service';
     SsdfYearsService,
     NewsService,
     ClassLevelsService,
+    CompetitionTypesService,
     VenuesService,
     InstructorsService,
     EventsService,

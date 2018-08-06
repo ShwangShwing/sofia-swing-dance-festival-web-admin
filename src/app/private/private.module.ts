@@ -9,6 +9,7 @@ import { ClassLevelsModule } from './class-levels/class-levels.module';
 import { VenuesModule } from './venues/venues.module';
 import { InstructorsModule } from './instructors/instructors.module';
 import { EventsModule } from './events/events.module';
+import { CompetitionTypesModule } from './competition-types/competition-types.module';
 
 @NgModule({
   imports: [
@@ -18,6 +19,7 @@ import { EventsModule } from './events/events.module';
     NewSsdfYearModule,
     NewsModule,
     ClassLevelsModule,
+    CompetitionTypesModule,
     VenuesModule,
     InstructorsModule,
     EventsModule
