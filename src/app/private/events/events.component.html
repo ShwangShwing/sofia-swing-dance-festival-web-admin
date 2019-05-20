@@ -9,7 +9,7 @@
   </select>
 </div>
 <div *ngIf="eventTypeFilter == 'class'" class="filter-by-class-level">
-  <label for="filter-by-class-level">Filter by type:</label>
+  <label for="filter-by-class-level">Filter by level:</label>
   <select id="filter-by-class-level" [(ngModel)]="classLevelFilter">
     <option value="">All</option>
     <option *ngFor="let classLevel of (classLevels$ | async)" [value]="classLevel.classLevelType">

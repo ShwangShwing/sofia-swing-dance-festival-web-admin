@@ -291,7 +291,7 @@ export class EventsComponent implements OnInit, OnDestroy {
   shouldShowEventByFilter(eventType: string, eventTypeFilter: string, classLevelFilter: string = ''): boolean {
     let shouldShow = eventType.startsWith(eventTypeFilter);
     if (eventTypeFilter === 'class') {
-      shouldShow = eventType.endsWith(classLevelFilter);
+      shouldShow = shouldShow && eventType.endsWith(classLevelFilter);
     }
 
     return shouldShow;
