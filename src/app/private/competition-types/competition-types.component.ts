@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CompetitionTypeModel } from '../../models/competition-type.model';
 import { CompetitionTypesService } from '../../services/data/competition-type.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-competition-types',

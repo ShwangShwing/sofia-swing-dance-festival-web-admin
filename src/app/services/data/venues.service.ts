@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
+import { map, switchMap, first } from 'rxjs/operators';
 import { VenueModel } from '../../models/venue.model';
-import { AngularFireDatabase } from 'angularfire2/database';
+import { AngularFireDatabase } from '@angular/fire/database';
 import { SsdfYearsService } from './ssdf-years.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class VenuesService {
@@ -11,15 +12,15 @@ export class VenuesService {
   constructor(private af: AngularFireDatabase,
     private ssdfYearsService: SsdfYearsService) {
     this.ssdfYearsService.getSelectedSsdfYear()
-      .switchMap(ssdfYear => {
+      .pipe(switchMap(ssdfYear => {
         return this.af
           .list(`/${ssdfYear}/venues`)
-          .snapshotChanges().map(dbVenues => ({ ssdfYear, dbVenues }));
-      })
+          .snapshotChanges().pipe(map(dbVenues => ({ ssdfYear, dbVenues })));
+      }))
       .subscribe(({ ssdfYear, dbVenues }) => {
         const outClassLevels: VenueModel[] = [];
         dbVenues.forEach(dbVenue => {
-          const inDbVenue = dbVenue.payload.val();
+          const inDbVenue: any = dbVenue.payload.val();
           const venue: VenueModel = {
             id: `${ssdfYear}/venues/${dbVenue.key}`,
             name: inDbVenue.name || '',
@@ -47,7 +48,7 @@ export class VenuesService {
   }
 
   insert(venue: VenueModel): void {
-    this.ssdfYearsService.getSelectedSsdfYear().first()
+    this.ssdfYearsService.getSelectedSsdfYear().pipe(first())
     .subscribe(ssdfYear => this.af.list(`/${ssdfYear}/venues`).push(venue));
   }
 

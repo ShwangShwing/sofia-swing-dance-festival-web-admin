@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
+import { map, switchMap, first } from 'rxjs/operators';
 import { InstructorModel } from '../../models/instructor.model';
-import { AngularFireDatabase } from 'angularfire2/database';
+import { AngularFireDatabase } from '@angular/fire/database';
 import { SsdfYearsService } from './ssdf-years.service';
 
 
@@ -11,15 +12,15 @@ export class InstructorsService {
   constructor(private af: AngularFireDatabase,
     private ssdfYearsService: SsdfYearsService) {
       this.ssdfYearsService.getSelectedSsdfYear()
-        .switchMap(ssdfYear => {
+        .pipe(switchMap(ssdfYear => {
           return this.af
           .list(`/${ssdfYear}/instructors`)
-          .snapshotChanges().map(dbInstructors => ({ssdfYear, dbInstructors}));
-        })
+          .snapshotChanges().pipe(map(dbInstructors => ({ssdfYear, dbInstructors})));
+        }))
         .subscribe(({ssdfYear, dbInstructors}) => {
           const outInstructors: InstructorModel[] = [];
           dbInstructors.forEach(dbInstructor => {
-            const inDbInstructor = dbInstructor.payload.val();
+            const inDbInstructor: any = dbInstructor.payload.val();
             const instructor: InstructorModel = {
               id: `${ssdfYear}/instructors/${dbInstructor.key}`,
               name: inDbInstructor.name || '',
@@ -46,7 +47,7 @@ export class InstructorsService {
 
   insert(instructor: InstructorModel): void {
     const instructorIdentifier = instructor.name.toLowerCase().replace(/[^0-9a-z]/gi, '');
-    this.ssdfYearsService.getSelectedSsdfYear().first()
+    this.ssdfYearsService.getSelectedSsdfYear().pipe(first())
     .subscribe(ssdfYear => {
       this.af.object(`/${ssdfYear}/instructors/${instructorIdentifier}`).set(instructor);
     });

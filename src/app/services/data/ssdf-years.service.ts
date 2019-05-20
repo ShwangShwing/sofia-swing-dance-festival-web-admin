@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { map, first } from 'rxjs/operators';
-import { AngularFireDatabase } from 'angularfire2/database';
+import { AngularFireDatabase } from '@angular/fire/database';
 
 @Injectable()
 export class SsdfYearsService {
@@ -24,11 +24,13 @@ export class SsdfYearsService {
 
   getAll(): Observable<string[]> {
     return this.af.list('/').snapshotChanges()
-      .map((ssdfYears) => {
+      .pipe(
+        map((ssdfYears) => {
         return ssdfYears.map(ssdfYear => ssdfYear.key)
           .filter(ssdfYear => ssdfYear !== 'activeSsdfYear')
           .sort((left, right) => right > left ? 1 : 0);
-      });
+        })
+      );
   }
 
   getSelectedSsdfYear(): Observable<string> {
@@ -52,7 +54,7 @@ export class SsdfYearsService {
   newSsdfYear(ssdfYearName: string): void {
     this.af.object(`/${ssdfYearName}`)
       .valueChanges()
-      .first()
+      .pipe(first())
       .toPromise()
       .then(year => {
         if (!year) {
@@ -65,13 +67,13 @@ export class SsdfYearsService {
   copySsdfYear(ssdfYearFrom: string, ssdfYearName: string): void {
     this.af.object(`/${ssdfYearName}`)
       .valueChanges()
-      .first()
+      .pipe(first())
       .toPromise()
       .then(year => {
         if (!year) {
           this.af.object(`/${ssdfYearFrom}`)
             .valueChanges()
-            .first()
+            .pipe(first())
             .toPromise<any>()
             .then(oldYear => {
               const events = oldYear.events || {};

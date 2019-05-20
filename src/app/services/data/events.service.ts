@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
+import { map, switchMap, first } from 'rxjs/operators';
 import { EventModel } from '../../models/event.model';
-import { AngularFireDatabase } from 'angularfire2/database';
+import { AngularFireDatabase } from '@angular/fire/database';
 import { SsdfYearsService } from './ssdf-years.service';
 
 @Injectable()
@@ -10,15 +11,15 @@ export class EventsService {
   constructor(private af: AngularFireDatabase,
     private ssdfYearsService: SsdfYearsService) {
       this.ssdfYearsService.getSelectedSsdfYear()
-        .switchMap(ssdfYear => {
+        .pipe(switchMap(ssdfYear => {
           return this.af
             .list(`/${ssdfYear}/events`)
-            .snapshotChanges().map(dbEvents => ({ssdfYear, dbEvents}));
-        })
+            .snapshotChanges().pipe(map(dbEvents => ({ssdfYear, dbEvents})));
+        }))
         .subscribe(({ssdfYear, dbEvents}) => {
           const outEvent: EventModel[] = [];
           dbEvents.forEach(dbEvent => {
-            const inDbEvent = dbEvent.payload.val();
+            const inDbEvent: any = dbEvent.payload.val();
             const event: EventModel = {
               id: `/${ssdfYear}/events/${dbEvent.key}`,
               name: inDbEvent.name || '',
@@ -135,7 +136,7 @@ export class EventsService {
     if (!event.venueId) { return; }
     event.start = event.start | 0;
     event.end = event.end | 0;
-    this.ssdfYearsService.getSelectedSsdfYear().first()
+    this.ssdfYearsService.getSelectedSsdfYear().pipe(first())
     .subscribe(ssdfYear => {
       this.af.list(`/${ssdfYear}/events/`).push(event);
     });

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ClassLevelModel } from '../../models/class-level.model';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { map, switchMap, first } from 'rxjs/operators';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { AngularFireDatabase } from 'angularfire2/database';
+import { BehaviorSubject } from 'rxjs';
+import { AngularFireDatabase } from '@angular/fire/database';
 import { SsdfYearsService } from './ssdf-years.service';
 
 @Injectable()
@@ -12,13 +12,13 @@ export class ClassLevelsService {
   constructor(private af: AngularFireDatabase,
     private ssdfYearsService: SsdfYearsService) {
       this.ssdfYearsService.getSelectedSsdfYear()
-        .switchMap(ssdfYear => {
+        .pipe(switchMap(ssdfYear => {
           return this.af.list(`/${ssdfYear}/classLevels`)
-            .snapshotChanges().map(dbClassLevels => ({ ssdfYear, dbClassLevels }));
-        }).subscribe(({ssdfYear, dbClassLevels}) => {
+            .snapshotChanges().pipe(map(dbClassLevels => ({ ssdfYear, dbClassLevels })));
+        })).subscribe(({ssdfYear, dbClassLevels}) => {
           const outClassLevels: ClassLevelModel[] = [];
           dbClassLevels.forEach(dbClassLevel => {
-            const inDbClassLevel = dbClassLevel.payload.val();
+            const inDbClassLevel: any = dbClassLevel.payload.val();
             const classLevel: ClassLevelModel = {
               id: `${ssdfYear}/classLevels/${dbClassLevel.key}`,
               classLevelType: dbClassLevel.key,
@@ -33,7 +33,7 @@ export class ClassLevelsService {
         });
   }
 
-  getAll() {
+  getAll(): Observable<ClassLevelModel[]> {
     return this.classLevels$;
   }
 
@@ -47,7 +47,7 @@ export class ClassLevelsService {
       throw new Error('Put more valid name!');
     }
 
-    this.ssdfYearsService.getSelectedSsdfYear().first()
+    this.ssdfYearsService.getSelectedSsdfYear().pipe(first())
     .subscribe(ssdfYear => {
       this.af.object(`/${ssdfYear}/classLevels/${classLevelIdentifier}`).set(classLevel);
     });

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { VenueModel } from '../../models/venue.model';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { VenuesService } from '../../services/data/venues.service';
 import { UploadService } from '../../services/data/upload-service.service';
 

@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { EventsService } from '../../services/data/events.service';
 import { EventModel } from '../../models/event.model';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { ClassLevelsService } from '../../services/data/class-levels.service';
 import { VenuesService } from '../../services/data/venues.service';
 import { ClassLevelModel } from '../../models/class-level.model';
 import { VenueModel } from '../../models/venue.model';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { InstructorModel } from '../../models/instructor.model';
 import { InstructorsService } from '../../services/data/instructors.service';
 import { CompetitionTypeModel } from '../../models/competition-type.model';

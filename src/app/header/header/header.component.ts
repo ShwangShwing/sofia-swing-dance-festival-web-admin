@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import * as firebase from 'firebase/app';
 import { AuthService } from '../../services/auth.service';
 import { SsdfYearsService } from '../../services/data/ssdf-years.service';

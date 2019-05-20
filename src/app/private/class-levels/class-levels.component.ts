@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ClassLevelModel } from '../../models/class-level.model';
 import { ClassLevelsService } from '../../services/data/class-levels.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-class-levels',
