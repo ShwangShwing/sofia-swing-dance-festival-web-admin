@@ -23,6 +23,6 @@ export class UploadService {
     const fileRef = storageRef.child(filename);
 
     return fileRef.put(file)
-        .then(snapshot => snapshot.downloadURL);
+        .then(snapshot => snapshot.ref.getDownloadURL());
   }
 }
