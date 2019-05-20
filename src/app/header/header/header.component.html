@@ -27,9 +27,9 @@
         <li *ngIf="(firebaseUser$ | async)?.uid" [routerLinkActive]="['active']">
                 <a routerLink="/private/class-levels">Class levels</a>
         </li>
-        <li *ngIf="(firebaseUser$ | async)?.uid" [routerLinkActive]="['active']">
+        <!-->li *ngIf="(firebaseUser$ | async)?.uid" [routerLinkActive]="['active']">
             <a routerLink="/private/competition-types">Competition types</a>
-        </li>
+        </li-->
         <li *ngIf="(firebaseUser$ | async)?.uid" [routerLinkActive]="['active']">
                 <a routerLink="/private/instructors">Instructors</a>
         </li>
