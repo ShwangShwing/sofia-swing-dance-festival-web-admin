@@ -1,3 +1,8 @@
 .filter-by-type {
     padding-bottom: 0.5em;
 }
+
+.instructor-name {
+    padding-left: 3ch;
+    font-style: italic;
+}
