@@ -117,6 +117,23 @@ export class EventsComponent implements OnInit, OnDestroy {
     this.eventsSubscr.unsubscribe();
   }
 
+  stringToColour(str: string): string {
+    let hash = 0;
+    for (var i = 0; i < str.length; i++) {
+        let character = str.charCodeAt(i);
+        hash = ((hash<<5) - hash) + character;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+
+    let colour = '#';
+    for (let i = 0; i < 3; i++) {
+      let value = (hash >> (i * 8)) & 0xFF;
+      colour += ('00' + value.toString(16)).substr(-2);
+    }
+    colour += '22' // transperancy
+    return colour;
+  }
+
   getEventTypeHumanString(eventType: string): string {
     if (eventType.startsWith('class_')) {
       const classLevel = eventType.substr('class_'.length);

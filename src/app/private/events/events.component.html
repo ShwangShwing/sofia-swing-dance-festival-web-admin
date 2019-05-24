@@ -31,12 +31,15 @@
   </thead>
   <tbody>
     <ng-container *ngFor="let event of (events$ | async)">
-      <tr *ngIf="shouldShowEventByFilter(event.type, eventTypeFilter, classLevelFilter)" class="item-row" [class.item-for-deletion]="event.id == deleteId" [class.edited-item]="event.id == editId">
+      <tr *ngIf="shouldShowEventByFilter(event.type, eventTypeFilter, classLevelFilter)" 
+        class="item-row" 
+        [class.item-for-deletion]="event.id == deleteId" 
+        [class.edited-item]="event.id == editId">
         <td>
           <div>{{event.name}}</div>
           <div class="instructor-name" *ngFor="let instructorId of event.instructorIds">{{instructors[instructorId] ? instructors[instructorId].name : ''}}</div>
         </td>
-        <td>
+        <td [style.background-color]="stringToColour(event.startTime * 1000 | date: 'yyyy-MM-dd O' : 'Europe/Sofia')">
           {{event.startTime * 1000 | date: 'yyyy-MM-dd HH:mm O' : 'Europe/Sofia'}}
         </td>
         <td>
