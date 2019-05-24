@@ -27,6 +27,7 @@
     "express": "^4.16.3",
     "firebase": "^5.5.0",
     "font-awesome": "^4.7.0",
+    "force-ssl-heroku": "^1.0.2",
     "primeng": "^5.2.6",
     "rxjs": "^6.5.2",
     "tslib": "^1.9.0",
