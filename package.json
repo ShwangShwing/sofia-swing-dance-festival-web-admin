@@ -24,7 +24,7 @@
     "@angular/router": "^7.2.15",
     "angular-font-awesome": "^3.1.2",
     "core-js": "^2.6.5",
-    "express": "^4.16.3",
+    "express": "^4.17.3",
     "firebase": "^5.5.0",
     "font-awesome": "^4.7.0",
     "force-ssl-heroku": "^1.0.2",
